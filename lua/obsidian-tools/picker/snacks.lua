@@ -2,13 +2,15 @@
 local M = {}
 
 M.quickswitch = function()
-  require("snacks").picker.files { ft = "md", cwd = os.getenv("OBSIDIAN_HOME") .. "/Work/" }
+  local workspace = require("obsidian-tools.workspace").get_current()
+  require("snacks").picker.files { ft = "md", cwd = workspace.directory }
 end
 M.tags = function()
-  vim.ui.select({ "TODO" }, { prompt = "Select Tag to search for" }, function(tag)
+  local workspace = require("obsidian-tools.workspace").get_current()
+  vim.ui.input({ prompt = "Select Tag to search for" }, function(tag)
     require("snacks").picker.grep {
       ft = "md",
-      cwd = os.getenv("OBSIDIAN_HOME") .. "/Work/",
+      cwd = workspace.directory,
       live = false,
       search = "#" .. tag,
     }

@@ -1,21 +1,25 @@
 local M = {}
 
-local base_template = [[
+M.base = [[
 ---
 aliases: 
   - {title}
-created: ]] .. os.date("%Y-%m-%d") .. [[
+created: {today} 
+
 ---
 # {title}
 ]]
 
-local templates = { base = base_template }
-
-M.format_template = function(template_name, substitutes)
+M.format_template = function(title)
+  local config = require("obsidian-tools.config").get().template
+  local aliases = vim.tbl_deep_extend("force", config.aliases, { title = title })
+  local path = vim.api.nvim_buf_get_name(0)
+  local template_name = config.resolve_template(path, title)
+  local template_config = require("obsidian-tools.config").get().template
   template_name = template_name or "base"
-  for name, template in pairs(templates) do
+  for name, template in pairs(template_config.templates) do
     if template_name == name then
-      for key, value in pairs(substitutes) do
+      for key, value in pairs(aliases) do
         template = template:gsub("{" .. key .. "}", value)
       end
       return template

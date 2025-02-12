@@ -1,16 +1,12 @@
-local function open_in_obsidian()
-  -- Get the full path of the current file
+local M = {}
+M.open_in_obsidian = function()
   local file_path = vim.api.nvim_buf_get_name(0)
-
-  -- Replace your vault name here
-  local vault_name = "YourVaultName"
-
-  -- Extract the relative path of the file within the vault
-  local relative_path = file_path:match(".*/" .. vault_name .. "/(.*)")
+  local workspace = require("obsidian-tools.workspace").get_current()
+  local relative_path = file_path:match(".*/" .. workspace.name .. "/(.*)")
 
   if relative_path then
     -- Construct the Obsidian URI
-    local obsidian_uri = string.format("obsidian://open?vault=%s&file=%s", vault_name, relative_path)
+    local obsidian_uri = string.format("obsidian://open?vault=%s&file=%s", workspace.name, relative_path)
 
     -- Open the URI using the default method
     -- For macOS
@@ -23,3 +19,5 @@ local function open_in_obsidian()
     print("Current file is not within the specified Obsidian vault.")
   end
 end
+
+return M
