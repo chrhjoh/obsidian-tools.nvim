@@ -19,3 +19,6 @@
 ---@field resolve_template fun(directory, title):string
 ---@field aliases table<string, fun(directory, title):string>
 ---@field templates table<string, string[]>
+
+---@class ObsidianTools.NewNoteOpts
+---@field edit_file boolean

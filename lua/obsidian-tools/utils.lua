@@ -1,5 +1,7 @@
 local M = {}
 
+---@param bufnr integer
+---@return boolean
 M.buf_in_workspace = function(bufnr)
   return false
 end
@@ -25,6 +27,22 @@ M.get_visual_selection = function()
   lines[1] = lines[1]:sub(start_col)
 
   return lines[1]:sub(1, end_col - start_col + 1)
+end
+
+---@param filepath string
+---@return string
+M.get_filestem = function(filepath)
+  local filename = vim.fn.fnamemodify(filepath, ":t")
+  return filename:match("(.+)%..+$") or filename
+end
+
+---@param filepath string
+---@param n? integer
+---@return string
+M.get_parent_directory = function(filepath, n)
+  n = n or 1
+  local modifier = string.rep(":h", n)
+  return vim.fn.fnamemodify(filepath, modifier)
 end
 
 return M

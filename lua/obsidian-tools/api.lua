@@ -4,20 +4,34 @@ local M = {}
 local notes = require("obsidian-tools.notes")
 local config = require("obsidian-tools.config").get()
 
-M.new_from_prompt = function()
+---Creates a new notes by prompting the user for the note.
+---@param opts? ObsidianTools.NewNoteOpts
+M.new_from_prompt = function(opts)
+  opts = opts or {}
   vim.ui.input({ prompt = "Enter title for new note" }, function(title)
     if not title and title ~= "" then
       return
     end
-    notes.generate_note(title, config.notes)
+    local filepath = notes.generate_note(title, config.notes)
+    if opts.edit_file then
+      vim.cmd("e " .. filepath)
+    end
   end)
 end
 
-M.new_from_visual = function()
-  local title = require("obsidian-tools.utils").get_visual_selection()
+---Creates a new notes from visual selection and links to it.
+---@param opts? ObsidianTools.NewNoteOpts
+M.new_from_visual = function(opts)
+  opts = opts or {}
+  local obsidian_utils = require("obsidian-tools.utils")
+  local title = obsidian_utils.get_visual_selection()
   if title then
-    local filestem = notes.generate_note(title, config.notes)
+    local filepath = notes.generate_note(title, config.notes)
+    local filestem = obsidian_utils.get_filestem(filepath)
     vim.cmd("s/" .. title .. "/[[" .. filestem .. "|" .. title .. "]]")
+    if opts.edit_file then
+      vim.cmd("e " .. filepath)
+    end
   end
 end
 
@@ -44,24 +58,6 @@ end
 
 M.quickswitch = require("obsidian-tools.picker.snacks").quickswitch
 
-local function prepend_to_file(filename, content)
-  local file = io.open(filename, "r")
-  local original_content = ""
-
-  if file then
-    original_content = file:read("*all")
-    file:close()
-  end
-
-  file = io.open(filename, "w")
-  if file then
-    file:write(content .. "\n" .. original_content)
-    file:close()
-  else
-    vim.notify("Error: Could not open file for writing.")
-  end
-end
-
 M.apply_template = function()
   local path = vim.api.nvim_buf_get_name(0)
   vim.ui.input({ prompt = "Title to use for template" }, function(title)
@@ -69,7 +65,7 @@ M.apply_template = function()
       return
     end
     local content = require("obsidian-tools.templates").format_template(title)
-    prepend_to_file(path, content)
+    vim.fn.writefile(content, path, "a")
     vim.cmd("e")
   end)
 end
