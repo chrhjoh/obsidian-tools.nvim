@@ -18,4 +18,4 @@
 ---@class ObsidianTools.TemplateConfig
 ---@field resolve_template fun(directory, title):string
 ---@field aliases table<string, fun(directory, title):string>
----@field templates table<string, string>
+---@field templates table<string, string[]>

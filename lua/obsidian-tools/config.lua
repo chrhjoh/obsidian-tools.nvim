@@ -27,7 +27,17 @@ local config = {
         return title
       end,
     },
-    templates = { base = templates.base },
+    templates = {
+      base = {
+        "---",
+        "aliases:",
+        "  - {title}",
+        "created: {today}",
+        "",
+        "---",
+        "# {title}",
+      },
+    },
   },
 }
 

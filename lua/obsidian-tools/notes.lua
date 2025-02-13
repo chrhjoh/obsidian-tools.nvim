@@ -15,16 +15,9 @@ M.generate_note = function(title, opts)
   local current_file_path = vim.api.nvim_buf_get_name(0)
   local directory = vim.fn.fnamemodify(current_file_path, ":h")
   local filepath = opts.resolve_directory(directory, title) .. "/" .. filestem .. ".md"
-
-  local file = io.open(filepath, "w")
-  if file then
-    -- Write the template with replaced tags to the file
-    file:write(content)
-    file:close()
-    vim.notify("File created at: " .. filepath)
-  else
-    vim.notify("Error: Could not create file")
-  end
+  -- Write the template with replaced tags to the file
+  vim.fn.writefile(content, filepath, "a")
+  vim.notify("File created at: " .. filepath)
   return filestem
 end
 
