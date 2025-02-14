@@ -72,14 +72,4 @@ end
 
 M.select_workspace = require("obsidian-tools.workspace").select_workspace
 
----@param days? integer
----@param opts? ObsidianTools.DailyConfig
----@return string
-M.daily_note = function(days, opts)
-  local ts = vim.fn.localtime()
-  opts = vim.tbl_deep_extend("force", require("obsidian-tools.config").get().daily, opts or {})
-  days = days or 0
-  return require("obsidian-tools.daily").get_relative_date(ts, days, opts)
-end
-
 return M
