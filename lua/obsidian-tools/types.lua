@@ -2,6 +2,7 @@
 ---@field workspaces ObsidianTools.Workspace[]
 ---@field notes ObsidianTools.NoteConfig
 ---@field template ObsidianTools.TemplateConfig
+---@field daily ObsidianTools.DailyConfig
 
 ---@class ObsidianTools.Workspace
 ---@field name string
@@ -22,3 +23,9 @@
 
 ---@class ObsidianTools.NewNoteOpts
 ---@field edit_file boolean
+
+---@class ObsidianTools.DailyConfig
+---@field directory? string
+---@field weekday? boolean
+---@field date_format? string
+---@field resolve_filename? fun(date: string):string

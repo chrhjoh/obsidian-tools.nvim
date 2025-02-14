@@ -1,5 +1,4 @@
 local M = {}
-local templates = require("obsidian-tools.templates")
 ---@class ObsidianTools.Config
 local config = {
   workspaces = {},
@@ -13,6 +12,14 @@ local config = {
     end,
     resolve_directory = function(current_buffer, title)
       return current_buffer
+    end,
+  },
+  daily = {
+    date_format = "%Y-%m-%d",
+    directory = "",
+    weekday = false,
+    resolve_filename = function(date)
+      return date .. ".md"
     end,
   },
   template = {
